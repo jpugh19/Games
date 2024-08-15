@@ -1,6 +1,5 @@
-//each piece: moves, moved, startingsquare, position
-//king: castling, check
-//pawn: enpassante, queening, firstmove
+//king: check
+//pawn: enpassante, queening
 
 // 0 = 80
 // 1 = 160
@@ -182,7 +181,6 @@ function mouseClicked() {
 }
 
 function move() {
-  console.log(selected);
   if (valid())
   {
     boardArray[selected.yArr][selected.xArr] = null;
@@ -200,7 +198,6 @@ function move() {
     else if (turn === 'black') {
       turn = 'white';
     }
-    console.log(boardArray);
     selected = null;
   }
 }
@@ -412,11 +409,21 @@ class Pawn extends Piece {
   }
 
   enPassante() {
+    if (turn === 'white') {
 
+    }
+    else if (turn === 'black') {
+
+    }
   }
 
   promotion() {
+    if (turn === 'white') {
 
+    }
+    else if (turn === 'black') {
+
+    }
   }
 }
 
@@ -675,8 +682,10 @@ class King extends Piece {
         boardArray[far.yArr][far.xArr] = null;
         far.xArr = xNew + 1;
         far.yArr = yNew;
-        far.token.x = convert(xNew + 1);
-        far.token.y = convert(yNew);
+        far.xPos = convert(xNew + 1);
+        far.yPos = convert(yNew);
+        far.token.x = far.xPos;
+        far.token.y = far.yPos;
         far.moved = true;
         boardArray[far.yArr][far.xArr] = far;
         return true;
@@ -690,11 +699,12 @@ class King extends Piece {
         boardArray[near.yArr][near.xArr] = null;
         near.xArr = xNew - 1;
         near.yArr = yNew;
-        near.token.x = convert(xNew - 1);
-        near.token.y = convert(yNew);
+        near.xPos = convert(xNew - 1);
+        near.yPos = convert(yNew);
+        near.token.x = near.xPos;
+        near.token.y = near.yPos;
         near.moved = true;
         boardArray[near.yArr][near.xArr] = near;
-        console.log(near.xArr, near.yArr);
         return true;
       }
     }
