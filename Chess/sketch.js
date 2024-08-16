@@ -12,11 +12,14 @@
 
 let selected = null;
 let last = null;
+let lastMove = null;
 let board;
 let animations;
 let pieces;
 let turn = 'white';
 let boardArray = new Array(8);
+let numMoves = 0;
+let pass;
 for (i = 0; i < boardArray.length; i++) {
   boardArray[i] = [];
   for (j = 0; j < boardArray.length; j++) {
@@ -198,7 +201,9 @@ function move() {
     else if (turn === 'black') {
       turn = 'white';
     }
+    lastMove = selected;
     selected = null;
+    numMoves++;
   }
 }
 
@@ -347,16 +352,20 @@ class Pawn extends Piece {
       if (xNew === this.xArr && yNew === this.yArr - 1) {
         return true;
       }
-      else if (Math.abs(xNew - this.xArr) === 1 && yNew === this.yArr - 1 && boardArray[yNew][xNew].team === 'black') {
-        return true
+      else if (Math.abs(xNew - this.xArr) === 1 && yNew === this.yArr - 1) {
+        if (this.enPassante(xNew, yNew) || boardArray[yNew][xNew].team === 'black') {
+          return true
+        }
       }
     }
     else if (turn === 'black') {
       if (xNew === this.xArr && yNew === this.yArr + 1) {
         return true;
       }
-      else if (Math.abs(xNew - this.xArr) === 1 && yNew === this.yArr + 1 && boardArray[yNew][xNew].team === 'white') {
-        return true;
+      else if (Math.abs(xNew - this.xArr) === 1 && yNew === this.yArr + 1) {
+        if (this.enPassante(xNew, yNew) || boardArray[yNew][xNew].team === 'white') {
+          return true;
+        }
       }
     }
   }
@@ -396,11 +405,13 @@ class Pawn extends Piece {
     if (!this.moved) {
       if (turn === 'white') {
         if (xNew === this.xArr && (yNew === this.yArr - 1 || yNew === this.yArr - 2) && boardArray[yNew][xNew] === null) {
+          pass = numMoves;
           return true;
         }
       }
       else if (turn === 'black') {
         if (xNew === this.xArr && (yNew === this.yArr + 1 || yNew === this.yArr + 2) && boardArray[yNew][xNew] === null) {
+          pass = numMoves;
           return true;
         }
       }
@@ -408,13 +419,28 @@ class Pawn extends Piece {
     return false;
   }
 
-  enPassante() {
-    if (turn === 'white') {
-
+  enPassante(xNew, yNew) {
+    if (numMoves - 1 === pass) {
+      if (turn === 'white') {
+        if (this.yArr === 3 && (lastMove.yArr === this.yArr && Math.abs(lastMove.xArr - this.xArr) === 1)) {
+          if (Math.abs(xNew - this.xArr) === 1 && yNew === this.yArr - 1 && lastMove.xArr === xNew) {
+            boardArray[lastMove.yArr][lastMove.xArr] = null;
+            lastMove.token.remove();
+            return true;
+          }
+        }
+      }
+      else if (turn === 'black') {
+        if (this.yArr === 4 && (lastMove.yArr === this.yArr && Math.abs(lastMove.xArr - this.xArr) === 1)) {
+          if (Math.abs(xNew - this.xArr) === 1 && yNew === this.yArr + 1 && lastMove.xArr === xNew) {
+            boardArray[lastMove.yArr][lastMove.xArr] = null;
+            lastMove.token.remove();
+            return true;
+          }
+        }
+      }
     }
-    else if (turn === 'black') {
-
-    }
+    return false;
   }
 
   promotion() {
