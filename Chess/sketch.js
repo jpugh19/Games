@@ -1,5 +1,5 @@
 //king: check
-//pawn: enpassante, queening
+//pawn: queening
 
 // 0 = 80
 // 1 = 160
@@ -195,6 +195,7 @@ function move() {
     selected.token.y = selected.yPos;
     selected.moved = true;
     boardArray[selected.yArr][selected.xArr] = selected;
+    selected.promotion();
     if (turn === 'white') {
       turn = 'black';
     }
@@ -336,6 +337,8 @@ class Piece {
     this.token.collider = 'dynamic';
     this.token.layer = 2;
   }
+
+  promotion() {}
 }
 
 class Pawn extends Piece {
@@ -444,11 +447,23 @@ class Pawn extends Piece {
   }
 
   promotion() {
+    let xSpot = this.xArr;
+    let ySpot = this.yArr;
     if (turn === 'white') {
-
+      if (this.yArr === 0) {
+        boardArray[this.yArr][this.xArr] = null;
+        selected.token.remove();
+        boardArray[ySpot][xSpot] = new Queen('white', convert(xSpot), convert(ySpot));
+        boardArray[ySpot][xSpot].build('wQueen');
+      }
     }
     else if (turn === 'black') {
-
+      if (this.yArr === 7) {
+        boardArray[this.yArr][this.xArr] = null;
+        selected.token.remove();
+        boardArray[ySpot][xSpot] = new Queen('black', convert(xSpot), convert(ySpot));
+        boardArray[ySpot][xSpot].build('bQueen');
+      }
     }
   }
 }
@@ -699,7 +714,7 @@ class King extends Piece {
     let far = boardArray[this.yArr][0];
     let near = boardArray[this.yArr][7];
     if (!this.moved) {
-      if (!far.moved && yNew === this.yArr && xNew === 1) {
+      if (far != null && !far.moved && yNew === this.yArr && xNew === 2) {
         for (i = 1; i < this.xArr; i++) {
           if (boardArray[this.yArr][i] != null) {
             return false;
@@ -716,7 +731,7 @@ class King extends Piece {
         boardArray[far.yArr][far.xArr] = far;
         return true;
       }
-      else if (!near.moved && yNew === this.yArr && xNew === 6) {
+      else if (near != null && !near.moved && yNew === this.yArr && xNew === 6) {
         for (i = this.xArr + 1; i < 7; i++) {
           if (boardArray[this.yArr][i] != null) {
             return false;
