@@ -20,6 +20,8 @@ let turn = 'white';
 let boardArray = new Array(8);
 let numMoves = 0;
 let pass;
+let wKing;
+let bKing;
 for (i = 0; i < boardArray.length; i++) {
   boardArray[i] = [];
   for (j = 0; j < boardArray.length; j++) {
@@ -57,104 +59,74 @@ function setup() {
   board.collider = 'none';
   board.layer = 1;
 
-  let qBlackRook = new Rook('black', convert(0), convert(0));
-  let qBlackKnight = new Knight('black', convert(1), convert(0));
-  let qBlackBishop = new Bishop('black', convert(2), convert(0));
-  let blackQueen = new Queen('black', convert(3), convert(0));
-  let blackKing = new King('black', convert(4), convert(0));
-  let kBlackBishop = new Bishop('black', convert(5), convert(0));
-  let kBlackKnight = new Knight('black', convert(6), convert(0));
-  let kBlackRook = new Rook('black', convert(7), convert(0));
-  let qBlackPawnR = new Pawn('black', convert(0), convert(1));
-  let qBlackPawnK = new Pawn('black', convert(1), convert(1));
-  let qBlackPawnB = new Pawn('black', convert(2), convert(1));
-  let qBlackPawn = new Pawn('black', convert(3), convert(1));
-  let kBlackPawn = new Pawn('black', convert(4), convert(1));
-  let kBlackPawnB = new Pawn('black', convert(5), convert(1));
-  let kBlackPawnK = new Pawn('black', convert(6), convert(1));
-  let kBlackPawnR = new Pawn('black', convert(7), convert(1));
-  let qWhitePawnR = new Pawn('white', convert(0), convert(6));
-  let qWhitePawnK = new Pawn('white', convert(1), convert(6));
-  let qWhitePawnB = new Pawn('white', convert(2), convert(6));
-  let qWhitePawn = new Pawn('white', convert(3), convert(6));
-  let kWhitePawn = new Pawn('white', convert(4), convert(6));
-  let kWhitePawnB = new Pawn('white', convert(5), convert(6));
-  let kWhitePawnK = new Pawn('white', convert(6), convert(6));
-  let kWhitePawnR = new Pawn('white', convert(7), convert(6));
-  let qWhiteRook = new Rook('white', convert(0), convert(7));
-  let qWhiteKnight = new Knight('white', convert(1), convert(7));
-  let qWhiteBishop = new Bishop('white', convert(2), convert(7));
-  let whiteQueen = new Queen('white', convert(3), convert(7));
-  let whiteKing = new King('white', convert(4), convert(7));
-  let kWhiteBishop = new Bishop('white', convert(5), convert(7));
-  let kWhiteKnight = new Knight('white', convert(6), convert(7));
-  let kWhiteRook = new Rook('white', convert(7), convert(7));
-  
-  qBlackRook.build('bRook');
-  qBlackKnight.build('bKnight');
-  qBlackBishop.build('bBishop');
-  blackQueen.build('bQueen');
-  blackKing.build('bKing');
-  kBlackBishop.build('bBishop');
-  kBlackKnight.build('bKnight');
-  kBlackRook.build('bRook');
-  qBlackPawnR.build('bPawn');
-  qBlackPawnK.build('bPawn');
-  qBlackPawnB.build('bPawn');
-  qBlackPawn.build('bPawn');
-  kBlackPawn.build('bPawn');
-  kBlackPawnB.build('bPawn');
-  kBlackPawnK.build('bPawn');
-  kBlackPawnR.build('bPawn');
-  qWhitePawnR.build('wPawn');
-  qWhitePawnK.build('wPawn');
-  qWhitePawnB.build('wPawn');
-  qWhitePawn.build('wPawn');
-  kWhitePawn.build('wPawn');
-  kWhitePawnB.build('wPawn');
-  kWhitePawnK.build('wPawn');
-  kWhitePawnR.build('wPawn');
-  qWhiteRook.build('wRook');
-  qWhiteKnight.build('wKnight');
-  qWhiteBishop.build('wBishop');
-  whiteQueen.build('wQueen');
-  whiteKing.build('wKing');
-  kWhiteBishop.build('wBishop');
-  kWhiteKnight.build('wKnight');
-  kWhiteRook.build('wRook');
+  boardArray[0][0] = new Rook('black', convert(0), convert(0));
+  boardArray[0][1] = new Knight('black', convert(1), convert(0));
+  boardArray[0][2] = new Bishop('black', convert(2), convert(0));
+  boardArray[0][3] = new Queen('black', convert(3), convert(0));
+  boardArray[0][4] = new King('black', convert(4), convert(0));
+  boardArray[0][5] = new Bishop('black', convert(5), convert(0));
+  boardArray[0][6] = new Knight('black', convert(6), convert(0));
+  boardArray[0][7] = new Rook('black', convert(7), convert(0));
+  boardArray[1][0] = new Pawn('black', convert(0), convert(1));
+  boardArray[1][1] = new Pawn('black', convert(1), convert(1));
+  boardArray[1][2] = new Pawn('black', convert(2), convert(1));
+  boardArray[1][3] = new Pawn('black', convert(3), convert(1));
+  boardArray[1][4] = new Pawn('black', convert(4), convert(1));
+  boardArray[1][5] = new Pawn('black', convert(5), convert(1));
+  boardArray[1][6] = new Pawn('black', convert(6), convert(1));
+  boardArray[1][7] = new Pawn('black', convert(7), convert(1));
+  boardArray[6][0] = new Pawn('white', convert(0), convert(6));
+  boardArray[6][1] = new Pawn('white', convert(1), convert(6));
+  boardArray[6][2] = new Pawn('white', convert(2), convert(6));
+  boardArray[6][3] = new Pawn('white', convert(3), convert(6));
+  boardArray[6][4] = new Pawn('white', convert(4), convert(6));
+  boardArray[6][5] = new Pawn('white', convert(5), convert(6));
+  boardArray[6][6] = new Pawn('white', convert(6), convert(6));
+  boardArray[6][7] = new Pawn('white', convert(7), convert(6));
+  boardArray[7][0] = new Rook('white', convert(0), convert(7));
+  boardArray[7][1] = new Knight('white', convert(1), convert(7));
+  boardArray[7][2] = new Bishop('white', convert(2), convert(7));
+  boardArray[7][3] = new Queen('white', convert(3), convert(7));
+  boardArray[7][4] = new King('white', convert(4), convert(7));
+  boardArray[7][5] = new Bishop('white', convert(5), convert(7));
+  boardArray[7][6] = new Knight('white', convert(6), convert(7));
+  boardArray[7][7] = new Rook('white', convert(7), convert(7));
 
-  boardArray[0][0] = qBlackRook;
-  boardArray[0][1] = qBlackKnight;
-  boardArray[0][2] = qBlackBishop;
-  boardArray[0][3] = blackQueen;
-  boardArray[0][4] = blackKing;
-  boardArray[0][5] = kBlackBishop;
-  boardArray[0][6] = kBlackKnight;
-  boardArray[0][7] = kBlackRook;
-  boardArray[1][0] = qBlackPawnR;
-  boardArray[1][1] = qBlackPawnK;
-  boardArray[1][2] = qBlackPawnB;
-  boardArray[1][3] = qBlackPawn;
-  boardArray[1][4] = kBlackPawn;
-  boardArray[1][5] = kBlackPawnB;
-  boardArray[1][6] = kBlackPawnK;
-  boardArray[1][7] = kBlackPawnR;
-  boardArray[6][0] = qWhitePawnR;
-  boardArray[6][1] = qWhitePawnK;
-  boardArray[6][2] = qWhitePawnB;
-  boardArray[6][3] = qWhitePawn;
-  boardArray[6][4] = kWhitePawn;
-  boardArray[6][5] = kWhitePawnB;
-  boardArray[6][6] = kWhitePawnK;
-  boardArray[6][7] = kWhitePawnR;
-  boardArray[7][0] = qWhiteRook;
-  boardArray[7][1] = qWhiteKnight;
-  boardArray[7][2] = qWhiteBishop;
-  boardArray[7][3] = whiteQueen;
-  boardArray[7][4] = whiteKing;
-  boardArray[7][5] = kWhiteBishop;
-  boardArray[7][6] = kWhiteKnight;
-  boardArray[7][7] = kWhiteRook;
+  boardArray[0][0].build('bRook');
+  boardArray[0][1].build('bKnight');
+  boardArray[0][2].build('bBishop');
+  boardArray[0][3].build('bQueen');
+  boardArray[0][4].build('bKing');
+  boardArray[0][5].build('bBishop');
+  boardArray[0][6].build('bKnight');
+  boardArray[0][7].build('bRook');
+  boardArray[1][0].build('bPawn');
+  boardArray[1][1].build('bPawn');
+  boardArray[1][2].build('bPawn');
+  boardArray[1][3].build('bPawn');
+  boardArray[1][4].build('bPawn');
+  boardArray[1][5].build('bPawn');
+  boardArray[1][6].build('bPawn');
+  boardArray[1][7].build('bPawn');
+  boardArray[6][0].build('wPawn');
+  boardArray[6][1].build('wPawn');
+  boardArray[6][2].build('wPawn');
+  boardArray[6][3].build('wPawn');
+  boardArray[6][4].build('wPawn');
+  boardArray[6][5].build('wPawn');
+  boardArray[6][6].build('wPawn');
+  boardArray[6][7].build('wPawn');
+  boardArray[7][0].build('wRook');
+  boardArray[7][1].build('wKnight');
+  boardArray[7][2].build('wBishop');
+  boardArray[7][3].build('wQueen');
+  boardArray[7][4].build('wKing');
+  boardArray[7][5].build('wBishop');
+  boardArray[7][6].build('wKnight');
+  boardArray[7][7].build('wRook');
+
+  bKing = boardArray[0][4];
+  wKing = boardArray[7][4];
 }
 
 function draw() {
@@ -167,16 +139,19 @@ function draw() {
 }
 
 function mouseClicked() {
+  console.log('press');
   for (i = 0; i < boardArray.length; i++) {
     for (j = 0; j < boardArray.length; j++) {
       if (boardArray[i][j] != null) {
         if (boardArray[i][j].team === turn && contains(boardArray[i][j].xPos, boardArray[i][j].yPos)) {
           selected = boardArray[i][j];
           last = selected;
+          console.log(last);
           break;
         }
       }
-      else if (selected != null) {
+      else if (selected != null && (boardArray[i][j] === null || boardArray[i][j].team != turn)) {
+        console.log('moving');
         move();
       }
     }
@@ -195,7 +170,7 @@ function move() {
     selected.token.y = selected.yPos;
     selected.moved = true;
     boardArray[selected.yArr][selected.xArr] = selected;
-    selected.promotion();
+    //selected.promotion();
     if (turn === 'white') {
       turn = 'black';
     }
@@ -221,6 +196,17 @@ function valid() {
   if (last.xArr === xSpot && last.yArr === ySpot) {
     return false;
   }
+  else if (boardArray[ySpot][boardArray] != null && boardArray[ySpot][xSpot].team === selected.team) {
+    selected = boardArray[ySpot][xSpot];
+  }
+  else if ((turn === 'white' && wKing.check()) || (turn === 'black' && bKing.check())) {
+    if (safe(xSpot, ySpot)) {
+      return true;
+    }
+    mouseX = -1;
+    mouseY = -1;
+    return false;
+  }
   else if (selected.blocked(xSpot, ySpot)) {
     mouseX = -1;
     mouseY = -1;
@@ -241,6 +227,22 @@ function valid() {
   else {
     return false;
   }
+}
+
+function safe(xNew, yNew) {
+  if (selected.moves(xNew, yNew)) {
+    xOld = selected.xArr;
+    yOld = selected.yArr;
+    boardArray[yNew][xNew] = selected;
+    if (turn === 'white') {
+      return !wKing.check();
+    }
+    else if (turn === 'black') {
+      return !bKing.check();
+    }
+    boardArray[yOld][xOld] = selected;
+  }
+  return false;
 }
 
 function middlify(num) {
@@ -318,6 +320,72 @@ function revert(boardPos) {
   return arrPos;
 }
 
+function recreate(newPiece, xSpot, ySpot) {
+  console.log(newPiece);
+  if (turn === 'white') {
+    if (newPiece === 'Queen') {
+      boardArray[ySpot][xSpot] = new Queen('white', convert(xSpot), convert(ySpot));
+      boardArray[ySpot][xSpot].build('wQueen');
+    }
+    else if (newPiece === 'Rook') {
+      boardArray[ySpot][xSpot] = new Rook('white', convert(xSpot), convert(ySpot));
+      boardArray[ySpot][xSpot].build('wRook');
+    }
+    else if (newPiece === 'Bishop') {
+      boardArray[ySpot][xSpot] = new Bishop('white', convert(xSpot), convert(ySpot));
+      boardArray[ySpot][xSpot].build('wBishop');
+    }
+    else if (newPiece === 'Knight') {
+      boardArray[ySpot][xSpot] = new Knight('white', convert(xSpot), convert(ySpot));
+      boardArray[ySpot][xSpot].build('wKnight');
+    }
+    else {
+      newPiece = null;
+    }
+  }
+  else if (turn === 'black') {
+    if (newPiece === 'Queen') {
+      boardArray[ySpot][xSpot] = new Queen('black', convert(xSpot), convert(ySpot));
+      boardArray[ySpot][xSpot].build('bQueen');
+    }
+    else if (newPiece === 'Rook') {
+      boardArray[ySpot][xSpot] = new Rook('black', convert(xSpot), convert(ySpot));
+      boardArray[ySpot][xSpot].build('bRook');
+    }
+    else if (newPiece === 'Bishop') {
+      boardArray[ySpot][xSpot] = new Bishop('black', convert(xSpot), convert(ySpot));
+      boardArray[ySpot][xSpot].build('bBishop');
+    }
+    else if (newPiece === 'Knight') {
+      boardArray[ySpot][xSpot] = new Knight('black', convert(xSpot), convert(ySpot));
+      boardArray[ySpot][xSpot].build('bKnight');
+    }
+    else {
+      newPiece = null;
+    }
+  }
+  return newPiece;
+}
+
+// function choose() {
+//   let qButton = createButton('Queen');
+//   let rButton = createButton('Rook');
+//   let bButton = createButton('Bishop');
+//   let kButton = createButton('Knight');
+//   let val = null;
+//   while (val === null) {
+//     qButton.mousePressed(val = 'Queen');
+//     rButton.mousePressed(val = 'Rook');
+//     bButton.mousePressed(val = 'Bishop');
+//     kButton.mousePressed(val = 'Knight');
+//   }
+//   return val;
+// }
+
+// function made(type) {
+//   return type;
+// }
+
 class Piece {
 
   constructor(team, xPos, yPos) {
@@ -345,6 +413,7 @@ class Pawn extends Piece {
 
   constructor(team, xPos, yPos) {
     super(team, xPos, yPos);
+    this.type = 'Pawn';
   }
 
   moves(xNew, yNew) {
@@ -449,20 +518,27 @@ class Pawn extends Piece {
   promotion() {
     let xSpot = this.xArr;
     let ySpot = this.yArr;
+    let newPiece;
     if (turn === 'white') {
       if (this.yArr === 0) {
         boardArray[this.yArr][this.xArr] = null;
         selected.token.remove();
-        boardArray[ySpot][xSpot] = new Queen('white', convert(xSpot), convert(ySpot));
-        boardArray[ySpot][xSpot].build('wQueen');
+        //newPiece = choose();
+        do {
+          newPiece = prompt("Input Queen, Rook, Bishop, or Knight.");
+          console.log(newPiece);
+          newPiece = recreate(newPiece, xSpot, ySpot);
+        } while(newPiece === null);
       }
     }
     else if (turn === 'black') {
       if (this.yArr === 7) {
         boardArray[this.yArr][this.xArr] = null;
         selected.token.remove();
-        boardArray[ySpot][xSpot] = new Queen('black', convert(xSpot), convert(ySpot));
-        boardArray[ySpot][xSpot].build('bQueen');
+        do {
+          newPiece = prompt("Input Queen, Rook, Bishop, or Knight.");
+          newPiece = recreate(newPiece, xSpot, ySpot);
+        } while(newPiece === null);
       }
     }
   }
@@ -472,12 +548,14 @@ class Rook extends Piece {
 
   constructor(team, xPos, yPos) {
     super(team, xPos, yPos);
+    this.type = 'Rook';
   }
 
   moves(xNew, yNew) {
     if (xNew === this.xArr || yNew === this.yArr) {
       return true;
     }
+    return false;
   }
 
   blocked(xNew, yNew) {
@@ -524,6 +602,7 @@ class Knight extends Piece {
 
   constructor(team, xPos, yPos) {
     super(team, xPos, yPos);
+    this.type = 'Knight';
   }
 
   moves(xNew, yNew) {
@@ -545,12 +624,14 @@ class Bishop extends Piece {
 
   constructor(team, xPos, yPos) {
     super(team, xPos, yPos);
+    this.type = 'Bishop';
   }
 
   moves(xNew, yNew) {
     if (Math.abs(xNew - this.xArr) === Math.abs(yNew - this.yArr)) {
       return true;
     }
+    return false;
   }
 
   blocked(xNew, yNew) {
@@ -601,12 +682,14 @@ class Queen extends Piece {
 
   constructor(team, xPos, yPos) {
     super(team, xPos, yPos);
+    this.type = 'Queen';
   }
 
   moves(xNew, yNew) {
     if (xNew === this.xArr || yNew === this.yArr || Math.abs(xNew - this.xArr) === Math.abs(yNew - this.yArr)) {
       return true;
     }
+    return false;
   }
 
   blocked(xNew, yNew) {
@@ -688,6 +771,7 @@ class King extends Piece {
   constructor(team, xPos, yPos) {
     super(team, xPos, yPos);
     this.threatened = false;
+    this.type = 'King';
   }
 
   moves(xNew, yNew) {
@@ -753,6 +837,63 @@ class King extends Piece {
   }
 
   check() {
-
+    this.threatened = false;
+    let up = false;
+    let down = false;
+    let left = false;
+    let right = false;
+    let upLeft = false;
+    let upRight = false;
+    let downLeft = false;
+    let downRight = false;
+    for (i = this.yArr - 1; i >= 0; i--) {
+      if (boardArray[i][this.xArr] != null) {
+        if (boardArray[i][this.xArr].team != this.team && (boardArray[i][this.xArr].type === 'Queen' || boardArray[i][this.xArr].type === 'Rook')) {
+          up = true;
+          break;
+        }
+        else {
+          up = false;
+          break;
+        }
+      }
+    }
+    for (i = this.yArr + 1; i <= 7; i++) {
+      if (boardArray[i][this.xArr] != null) {
+        if (boardArray[i][this.xArr].team != this.team && (boardArray[i][this.xArr].type === 'Queen' || boardArray[i][this.xArr].type === 'Rook')) {
+          down = true;
+          break;
+        }
+        else {
+          down = false;
+          break;
+        }
+      }
+    }
+    for (i = this.xArr - 1; i >= 0; i--) {
+      if (boardArray[this.yArr][i] != null) {
+        if (boardArray[this.yArr][i].team != this.team && (boardArray[this.yArr][i].type === 'Queen' || boardArray[this.yArr][i].type === 'Rook')) {
+          left = true;
+          break;
+        }
+        else {
+          left = false;
+          break;
+        }
+      }
+    }
+    for (i = this.xArr + 1; i <= 7; i++) {
+      if (boardArray[this.yArr][i] != null) {
+        if (boardArray[this.yArr][i].team != this.team && (boardArray[this.yArr][i].type === 'Queen' || boardArray[this.yArr][i].type === 'Rook')) {
+          right = true;
+        }
+        else {
+          right = false;
+        }
+      }
+    }
+    this.threatened = (up || down || left || right);
+    console.log(this.team, up, down, left, right, this.threatened);
+    return this.threatened;
   }
 }
