@@ -127,6 +127,7 @@ function setup() {
 
   bKing = boardArray[0][4];
   wKing = boardArray[7][4];
+  console.log('branch check');
 }
 
 function draw() {
@@ -139,7 +140,6 @@ function draw() {
 }
 
 function mouseClicked() {
-  console.log('press');
   for (i = 0; i < boardArray.length; i++) {
     for (j = 0; j < boardArray.length; j++) {
       if (boardArray[i][j] != null) {
@@ -196,7 +196,7 @@ function valid() {
   if (last.xArr === xSpot && last.yArr === ySpot) {
     return false;
   }
-  else if (boardArray[ySpot][boardArray] != null && boardArray[ySpot][xSpot].team === selected.team) {
+  else if (boardArray[ySpot][xSpot] != null && boardArray[ySpot][xSpot].team === selected.team) {
     selected = boardArray[ySpot][xSpot];
   }
   else if ((turn === 'white' && wKing.check()) || (turn === 'black' && bKing.check())) {
