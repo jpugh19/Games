@@ -16,6 +16,9 @@ let lastMove = null;
 let board;
 let animations;
 let pieces;
+let newPiece;
+let tempX;
+let tempY;
 let turn = 'white';
 let boardArray = new Array(8);
 let numMoves = 0;
@@ -146,12 +149,10 @@ function mouseClicked() {
         if (boardArray[i][j].team === turn && contains(boardArray[i][j].xPos, boardArray[i][j].yPos)) {
           selected = boardArray[i][j];
           last = selected;
-          console.log(last);
           break;
         }
       }
       else if (selected != null && (boardArray[i][j] === null || boardArray[i][j].team != turn)) {
-        console.log('moving');
         move();
       }
     }
@@ -170,12 +171,14 @@ function move() {
     selected.token.y = selected.yPos;
     selected.moved = true;
     boardArray[selected.yArr][selected.xArr] = selected;
-    //selected.promotion();
+    selected.promotion();
     if (turn === 'white') {
       turn = 'black';
+      // turn = 'white';
     }
     else if (turn === 'black') {
-      turn = 'white';
+      // turn = 'white';
+      turn = 'black';
     }
     lastMove = selected;
     selected = null;
@@ -321,7 +324,7 @@ function revert(boardPos) {
 }
 
 function recreate(newPiece, xSpot, ySpot) {
-  console.log(newPiece);
+  console.log(newPiece === 'Queen');
   if (turn === 'white') {
     if (newPiece === 'Queen') {
       boardArray[ySpot][xSpot] = new Queen('white', convert(xSpot), convert(ySpot));
@@ -364,27 +367,37 @@ function recreate(newPiece, xSpot, ySpot) {
       newPiece = null;
     }
   }
-  return newPiece;
 }
 
-// function choose() {
-//   let qButton = createButton('Queen');
-//   let rButton = createButton('Rook');
-//   let bButton = createButton('Bishop');
-//   let kButton = createButton('Knight');
-//   let val = null;
-//   while (val === null) {
-//     qButton.mousePressed(val = 'Queen');
-//     rButton.mousePressed(val = 'Rook');
-//     bButton.mousePressed(val = 'Bishop');
-//     kButton.mousePressed(val = 'Knight');
-//   }
-//   return val;
-// }
+function choose() {
+  document.getElementById("promotionAlert").style.display = "block";
+}
 
-// function made(type) {
-//   return type;
-// }
+function handleAction(res) {
+  let val = null;
+  console.log('result = '+res);
+  document.getElementById("promotionAlert").style.display = "none";
+  if (res === 'Q') {
+    val = 'Queen';
+  }
+  else if (res === 'R') {
+    val = 'Rook';
+  }
+  else if (res === 'B') {
+    val = 'Bishop';
+  }
+  else if (res === 'K') {
+    val = 'Knight';
+  }
+  console.log('value = '+val);
+  newPiece = val;
+  console.log('new piece = '+newPiece);
+  recreate(newPiece, tempX, tempY);
+}
+
+function made(type) {
+  return type;
+}
 
 class Piece {
 
@@ -516,31 +529,24 @@ class Pawn extends Piece {
   }
 
   promotion() {
-    let xSpot = this.xArr;
-    let ySpot = this.yArr;
-    let newPiece;
+    tempX = this.xArr;
+    tempY = this.yArr;
+    newPiece = null;
     if (turn === 'white') {
       if (this.yArr === 0) {
         boardArray[this.yArr][this.xArr] = null;
         selected.token.remove();
-        //newPiece = choose();
-        do {
-          newPiece = prompt("Input Queen, Rook, Bishop, or Knight.");
-          console.log(newPiece);
-          newPiece = recreate(newPiece, xSpot, ySpot);
-        } while(newPiece === null);
+        choose();
       }
     }
     else if (turn === 'black') {
       if (this.yArr === 7) {
         boardArray[this.yArr][this.xArr] = null;
         selected.token.remove();
-        do {
-          newPiece = prompt("Input Queen, Rook, Bishop, or Knight.");
-          newPiece = recreate(newPiece, xSpot, ySpot);
-        } while(newPiece === null);
+        choose();
       }
     }
+    //console.log(newPiece);
   }
 }
 
@@ -893,7 +899,7 @@ class King extends Piece {
       }
     }
     this.threatened = (up || down || left || right);
-    console.log(this.team, up, down, left, right, this.threatened);
+    //console.log(this.team, up, down, left, right, this.threatened);
     return this.threatened;
   }
 }
