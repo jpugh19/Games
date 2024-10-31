@@ -6,6 +6,20 @@
 
     <title>Sketch</title>
 
+    <style>
+      .promotion-alert {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+      }
+    </style>
+
     <link rel="stylesheet" type="text/css" href="style.css">
 
     <script src="libraries/p5.min.js"></script>
@@ -16,6 +30,14 @@
   </head>
 
   <body>
+    <div id="promotionAlert" class="promotion-alert">
+      <p>What piece do you want to promote to?</p>
+      <button onclick="handleAction('Q')">Queen</button>
+      <button onclick="handleAction('R')">Rook</button>
+      <button onclick="handleAction('B')">Bishop</button>
+      <button onclick="handleAction('K')">Knight</button>
+    </div>
+
     <script src="sketch.js"></script>
   </body>
 </html>
