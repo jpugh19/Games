@@ -1,5 +1,5 @@
-//king: check
-//pawn: promotion
+//king: check needs a lot of work
+//pawn: promotion moves
 
 // 0 = 80
 // 1 = 160
