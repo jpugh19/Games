@@ -1,5 +1,5 @@
 //king: check
-//pawn: queening
+//pawn: promotion
 
 // 0 = 80
 // 1 = 160
@@ -16,11 +16,14 @@ let lastMove = null;
 let board;
 let animations;
 let pieces;
+let chessBoardImg;
+let chessPiecesImg;
 let newPiece;
 let tempX;
 let tempY;
 let turn = 'white';
 let boardArray = new Array(8);
+let threatArray = new Array(8);
 let numMoves = 0;
 let pass;
 let wKing;
@@ -33,6 +36,8 @@ for (i = 0; i < boardArray.length; i++) {
 }
 
 function preload() {
+  chessBoardImg = loadImage('assets/ChessBoard.png');
+  chessPiecesImg = loadImage('assets/ChessPieces.png');
   animations = {
     stay: {row: 0, col: 0, frames: 1}
   };
@@ -55,8 +60,61 @@ function preload() {
 function setup() {
   createCanvas(720, 720);
 
+  resetGame();
+}
+
+function draw() {
+  if (turn === 'white') {
+    background('blue');
+  }
+  else if (turn === 'black') {
+    background('red');
+  }
+}
+
+function mouseClicked() {
+  for (i = 0; i < boardArray.length; i++) {
+    for (j = 0; j < boardArray.length; j++) {
+      if (boardArray[i][j] != null) {
+        if (boardArray[i][j].team === turn && contains(boardArray[i][j].xPos, boardArray[i][j].yPos)) {
+          selected = boardArray[i][j];
+          last = selected;
+          break;
+        }
+      }
+      else if (selected != null && (boardArray[i][j] === null || boardArray[i][j].team != turn)) {
+        move();
+      }
+    }
+  }
+}
+
+function gameOver() {
+  document.getElementById("gameAlert").style.display = "block";
+}
+
+function gameAction(res) {
+  document.getElementById("gameAlert").style.display = "none";
+  if (res === 'yes') {
+    resetGame();
+  }
+  else if (res === 'no') {
+    // do action
+  }
+}
+
+function resetGame() {
+  for (i = 0; i < boardArray.length; i++) {
+    for (j = 0; j < boardArray.length; j++) {
+      if (boardArray[i][j] != null) {
+        boardArray[i][j].token.remove();
+        boardArray[i][j] = null;
+      }
+    }
+  }
+
   board = new Sprite(width / 2, height / 2, 640, 640);
-  board.spriteSheet = 'assets/ChessBoard.png';
+  board.spriteSheet = chessBoardImg;
   board.addAnis(animations);
   board.changeAni('stay');
   board.collider = 'none';
@@ -103,7 +161,7 @@ function setup() {
   boardArray[0][5].build('bBishop');
   boardArray[0][6].build('bKnight');
   boardArray[0][7].build('bRook');
-  boardArray[1][0].build('bPawn');
+  boardArray[1][0].build('wPawn');
   boardArray[1][1].build('bPawn');
   boardArray[1][2].build('bPawn');
   boardArray[1][3].build('bPawn');
@@ -128,35 +186,13 @@ function setup() {
   boardArray[7][6].build('wKnight');
   boardArray[7][7].build('wRook');
 
+  boardArray[1][0].token.changeAni('bPawn');
+
   bKing = boardArray[0][4];
   wKing = boardArray[7][4];
-  console.log('branch check');
-}
 
-function draw() {
-  if (turn === 'white') {
-    background('blue');
-  }
-  else if (turn === 'black') {
-    background('red');
-  }
-}
-
-function mouseClicked() {
-  for (i = 0; i < boardArray.length; i++) {
-    for (j = 0; j < boardArray.length; j++) {
-      if (boardArray[i][j] != null) {
-        if (boardArray[i][j].team === turn && contains(boardArray[i][j].xPos, boardArray[i][j].yPos)) {
-          selected = boardArray[i][j];
-          last = selected;
-          break;
-        }
-      }
-      else if (selected != null && (boardArray[i][j] === null || boardArray[i][j].team != turn)) {
-        move();
-      }
-    }
-  }
+  numMoves = 0;
+  turn = 'white';
 }
 
 function move() {
@@ -174,11 +210,11 @@ function move() {
     selected.promotion();
     if (turn === 'white') {
       turn = 'black';
-      // turn = 'white';
+      //turn = 'white';
     }
     else if (turn === 'black') {
-      // turn = 'white';
-      turn = 'black';
+      turn = 'white';
+      //turn = 'black';
     }
     lastMove = selected;
     selected = null;
@@ -246,6 +282,10 @@ function safe(xNew, yNew) {
     boardArray[yOld][xOld] = selected;
   }
   return false;
+}
+
+function canMove() {
+  
 }
 
 function middlify(num) {
@@ -324,7 +364,6 @@ function revert(boardPos) {
 }
 
 function recreate(newPiece, xSpot, ySpot) {
-  console.log(newPiece === 'Queen');
   if (turn === 'white') {
     if (newPiece === 'Queen') {
       boardArray[ySpot][xSpot] = new Queen('white', convert(xSpot), convert(ySpot));
@@ -373,9 +412,8 @@ function choose() {
   document.getElementById("promotionAlert").style.display = "block";
 }
 
-function handleAction(res) {
+function promotionAction(res) {
   let val = null;
-  console.log('result = '+res);
   document.getElementById("promotionAlert").style.display = "none";
   if (res === 'Q') {
     val = 'Queen';
@@ -389,9 +427,7 @@ function handleAction(res) {
   else if (res === 'K') {
     val = 'Knight';
   }
-  console.log('value = '+val);
   newPiece = val;
-  console.log('new piece = '+newPiece);
   recreate(newPiece, tempX, tempY);
 }
 
@@ -412,7 +448,7 @@ class Piece {
 
   build(ani) {
     this.token = new Sprite(this.xPos, this.yPos, 80, 80);
-    this.token.spriteSheet = 'assets/ChessPieces.png';
+    this.token.spriteSheet = chessPiecesImg;
     this.token.addAnis(pieces);
     this.token.changeAni(ani);
     this.token.collider = 'dynamic';
@@ -546,7 +582,6 @@ class Pawn extends Piece {
         choose();
       }
     }
-    //console.log(newPiece);
   }
 }
 
@@ -899,7 +934,6 @@ class King extends Piece {
       }
     }
     this.threatened = (up || down || left || right);
-    //console.log(this.team, up, down, left, right, this.threatened);
     return this.threatened;
   }
 }
